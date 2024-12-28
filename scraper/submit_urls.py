@@ -1,4 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify  # type: ignore
+from utils import fetch_content
+
+
+def save_in_db(parsed_data):
+    print(parsed_data)
 
 app = Flask(__name__)
 
@@ -7,6 +12,10 @@ def submit_urls():
     urls = request.json.get('urls', [])
     
     # scrape given urls
+    for url in urls:
+        parsed_data = fetch_content(url)
+        save_in_db(parsed_data)
+    
     print(f"Received URLs: {urls}")
     return jsonify({"status": "success", "message": f"Received {len(urls)} URLs"})
 

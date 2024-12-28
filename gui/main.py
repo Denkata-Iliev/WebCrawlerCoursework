@@ -1,5 +1,5 @@
 import tkinter as tk
-import requests
+import requests  # type: ignore
 
 class DynamicInputApp:
     def __init__(self, root):
@@ -69,7 +69,6 @@ class DynamicInputApp:
             url = entry.get()  # Get the text from the Entry widget
             if url.strip():  # Only add non-empty inputs
                 urls.append(url)
-        print(urls)
 
         # Passing the list to the scraper container through this endpoint
         try:
