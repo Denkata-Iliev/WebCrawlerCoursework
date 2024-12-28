@@ -1,0 +1,39 @@
+services:
+
+  gui-app:
+    container_name: "gui-app"
+    build:
+      context: /gui
+      dockerfile: Dockerfile
+    environment:
+      ENVIRONMENT: "local"
+      DISPLAY: "${DISPLAY}"
+    networks:
+      - app-network
+    depends_on:
+      - scraper-app
+    # keep the container up and running, so we can exec into it
+    command:
+      tail -f /dev/null
+    volumes:
+      - ./gui/:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+  scraper-app:
+    container_name: "scraper-app"
+    build:
+      context: /scraper
+      dockerfile: Dockerfile
+    environment:
+      ENVIRONMENT: "local"
+    networks:
+      - app-network
+    # keep the container up and running, so we can exec into it
+    command:
+      bash -c "pipenv run python submit_urls.py"
+    volumes:
+      - ./scraper/:/app
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,5 +1,4 @@
 import tkinter as tk
-import requests
 
 class DynamicInputApp:
     def __init__(self, root):
@@ -40,8 +39,6 @@ class DynamicInputApp:
             for widget in self.inputs[-2].winfo_children():
                 if widget.cget("text") == "-":
                     widget.pack_forget()
-                if widget.cget("text") == "+":
-                    widget.pack_forget()
 
     def remove_input(self, frame):
         # Remove the frame and its widgets
@@ -49,18 +46,12 @@ class DynamicInputApp:
         frame.destroy()
 
         # Re-add the minus button to the last input if there are multiple inputs
-        last_frame = self.inputs[-1]
         if len(self.inputs) > 1:
+            last_frame = self.inputs[-1]
             for widget in last_frame.winfo_children():
                 if widget.cget("text") == "+":
                     minus_button = tk.Button(last_frame, text="-", command=lambda: self.remove_input(last_frame))
-                    minus_button.pack(side=tk.RIGHT, padx=5)
-                if widget.cget("text") == "+":
-                    plus_button = tk.Button(last_frame, text="+", command=lambda: self.add_input())
-                    plus_button.pack(side=tk.LEFT, padx=5)
-        else:
-            plus_button = tk.Button(last_frame, text="+", command=lambda: self.add_input())
-            plus_button.pack(side=tk.LEFT, padx=5)
+                    minus_button.pack(side=tk.LEFT, padx=5)
 
     def on_submit(self):
         urls = []
@@ -70,17 +61,7 @@ class DynamicInputApp:
             if url.strip():  # Only add non-empty inputs
                 urls.append(url)
         print(urls)
-
-        # Passing the list to the scraper container through this endpoint
-        try:
-            response = requests.post("http://scraper-app:5000/submit-urls", json={"urls": urls})
-            if response.status_code == 200:
-                print("Successfully sent URLs to the scraper container.")
-                print(response.json()['message'])
-            else:
-                print(f"Error: {response.status_code}, {response.text}")
-        except Exception as e:
-            print(f"Failed to send URLs: {e}")
+    # TODO: Pass the list to another container or store in a DB
 
 
 if __name__ == "__main__":

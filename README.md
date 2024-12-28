@@ -5,4 +5,4 @@
 0. install VcXsrv server, search xlaunch in start menu, launch it, next, next, check disable access control, next, done
 1. `ipconfig`, check IPv4 - ex: 192.168.1.100
 2. set env var DISPLAY=192.168.1.100:0 through windows ui to make it permanent
-3. `docker-compose up -d`, then after done, `docker exec -it coursework-python_app-1 bash`, then `pipenv run python main.py`
+3. open 2 terminals - one 
