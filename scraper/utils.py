@@ -2,6 +2,7 @@ import requests  # type: ignore
 from bs4 import BeautifulSoup  # type: ignore
 from urllib.parse import urlparse
 from urllib.robotparser import RobotFileParser
+import psycopg2  #type: ignore
 
 
 def is_allowed_to_scrape(url):
@@ -53,3 +54,23 @@ def fetch_content(url, selector={'tag': 'p', 'class_': ''}):
     soup = BeautifulSoup(response.content, 'html.parser')
     elements = soup.find_all(selector['tag'], class_=selector.get('class_'))
     return [element.get_text() for element in elements]
+
+def setup_db():
+     # Connect to Postgres
+    conn = psycopg2.connect(database="scraped_data", user="admin", password="root", host="postgres_db", port=5432)
+
+    # Create a cursor object to execute SQL commands
+    cursor = conn.cursor()
+
+    # Create a table for storing scraped data
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+        url TEXT,
+        content TEXT,
+        created TIMESTAMP
+    );
+    ''')
+
+    conn.commit()
+    conn.close()
