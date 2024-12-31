@@ -1,7 +1,7 @@
 services:
 
   gui-app:
-    container_name: "gui-app"
+    container_name: gui-app
     build:
       context: /gui
       dockerfile: Dockerfile
@@ -10,6 +10,8 @@ services:
       DISPLAY: "${DISPLAY}"
     networks:
       - app-network
+    ports:
+      - 5000:5000
     depends_on:
       - scraper-app
     # keep the container up and running, so we can exec into it
@@ -20,7 +22,7 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
 
   scraper-app:
-    container_name: "scraper-app"
+    container_name: scraper-app
     build:
       context: /scraper
       dockerfile: Dockerfile
@@ -32,7 +34,8 @@ services:
       - postgres_db
     # keep the container up and running, so we can exec into it
     command:
-      bash -c "pipenv run python submit_urls.py"
+      tail -f /dev/null
+      # bash -c "pipenv run python main.py"
     volumes:
       - ./scraper/:/app
 
@@ -50,6 +53,26 @@ services:
       - ./init-scripts:/docker-entrypoint-initdb.d
     networks:
       - app-network
+
+  analizer-app:
+    container_name: analizer-app
+    build:
+      context: /analizer
+      dockerfile: Dockerfile
+    environment:
+      ENVIRONMENT: "local"
+    networks:
+      - app-network
+    ports:
+      - 5001:5001
+    depends_on:
+      - scraper-app
+      - postgres_db
+    # keep the container up and running, so we can exec into it
+    command:
+      tail -f /dev/null
+    volumes:
+      - ./analizer/:/app
 
 networks:
   app-network:

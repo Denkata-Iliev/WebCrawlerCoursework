@@ -28,7 +28,7 @@ def is_allowed_to_scrape(url):
         print(f"Couldn't retrieve or parse robots.txt for {robots_url}. Proceeding with caution.")
         return False  # Default to False if there's an issue with robots.txt
 
-def fetch_content(url, selector={'tag': 'p', 'class_': ''}):
+def fetch_content(url, selector={'tag': 'div', 'class_': 'article-content'}):
     """
     Fetches and parses content from the provided URL based on the HTML selector, if allowed by robots.txt.
     

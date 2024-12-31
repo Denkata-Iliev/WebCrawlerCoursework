@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify  # type: ignore
 from utils import fetch_content, setup_db
 from datetime import datetime
+import requests  # type: ignore
 import psycopg2  # type: ignore
 
 
@@ -33,24 +34,15 @@ def submit_urls():
 
         save_in_db(tuples)
     
-    print(f"Received URLs: {urls}")
+    response = requests.post(
+        'http://analizer-app:5001/new-data-ready',
+        json={"message": "New data available"}
+    )
+
+    if response.status_code == 200:
+        print('Notified analizer successfully!')
+    
     return jsonify({"status": "success", "message": f"Received {len(urls)} URLs"})
-
-@app.route('/print', methods=['GET'])
-def print_db():
-    conn = psycopg2.connect(database="scraped_data", user="admin", password="root", host="postgres_db", port=5432)
-    cursor = conn.cursor()
-
-    cursor.execute('SELECT * FROM posts;')
-    rows = []
-    for row in cursor:
-        rows.append(row)
-    
-    cursor.close()
-    conn.close()
-    
-    return jsonify({"result": f"{rows}"})
-
 
 if __name__ == '__main__':
     setup_db()

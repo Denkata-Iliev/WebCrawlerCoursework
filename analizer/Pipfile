@@ -4,9 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-requests = "~=2.32"
+nltk = "*"
 psycopg2 = "~=2.9.10"
-python-socketio = "~=5.12.1"
+Flask = "~=3.1.0"
+Flask-SocketIO = "~=5.5.0"
 websocket-client = "~=1.8.0"
 
 [dev-packages]
