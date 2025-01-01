@@ -52,6 +52,11 @@ def new_data_ready():
     return jsonify({'status': 'success'})
 
 
+@app.route('/', methods=['GET'])
+def index():
+    return 'Hello from analizer!'
+
+
 if __name__ == '__main__':
     utils.setup_db()
-    socketio.run(app, host="0.0.0.0", port="5001")
+    socketio.run(app, host="0.0.0.0", port="5001", allow_unsafe_werkzeug=True)

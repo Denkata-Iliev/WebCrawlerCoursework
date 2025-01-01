@@ -13,10 +13,12 @@ services:
     ports:
       - 5000:5000
     depends_on:
-      - scraper-app
-    # keep the container up and running, so we can exec into it
+      scraper-app:
+        condition: service_healthy
+      analizer-app:
+        condition: service_healthy
     command:
-      tail -f /dev/null
+      bash -c "pipenv run python main.py"
     volumes:
       - ./gui/:/app
       - /tmp/.X11-unix:/tmp/.X11-unix
@@ -31,13 +33,18 @@ services:
     networks:
       - app-network
     depends_on:
-      - postgres_db
-    # keep the container up and running, so we can exec into it
+      postgres_db:
+        condition: service_healthy
     command:
-      tail -f /dev/null
-      # bash -c "pipenv run python main.py"
+      bash -c "pipenv run python main.py"
     volumes:
       - ./scraper/:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://scraper-app:5000"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
   postgres_db:
     container_name: container-pg
@@ -53,6 +60,12 @@ services:
       - ./init-scripts:/docker-entrypoint-initdb.d
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   analizer-app:
     container_name: analizer-app
@@ -66,13 +79,20 @@ services:
     ports:
       - 5001:5001
     depends_on:
-      - scraper-app
-      - postgres_db
-    # keep the container up and running, so we can exec into it
+      scraper-app:
+        condition: service_healthy
+      postgres_db:
+        condition: service_healthy
     command:
-      tail -f /dev/null
+      bash -c "pipenv run python main.py"
     volumes:
       - ./analizer/:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://analizer-app:5001"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
 networks:
   app-network:

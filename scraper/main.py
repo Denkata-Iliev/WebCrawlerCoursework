@@ -44,6 +44,10 @@ def submit_urls():
     
     return jsonify({"status": "success", "message": f"Received {len(urls)} URLs"})
 
+@app.route('/', methods=['GET'])
+def index():
+    return 'Hello from scraper!'
+
 if __name__ == '__main__':
     setup_db()
     app.run(host='0.0.0.0', port=5000)

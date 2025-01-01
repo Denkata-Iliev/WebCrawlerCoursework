@@ -28,7 +28,7 @@ def is_allowed_to_scrape(url):
         print(f"Couldn't retrieve or parse robots.txt for {robots_url}. Proceeding with caution.")
         return False  # Default to False if there's an issue with robots.txt
 
-def fetch_content(url, selector={'tag': 'div', 'class_': 'article-content'}):
+def fetch_content(url, selector={'tag': 'p', 'class_': ''}):
     """
     Fetches and parses content from the provided URL based on the HTML selector, if allowed by robots.txt.
     
@@ -52,7 +52,7 @@ def fetch_content(url, selector={'tag': 'div', 'class_': 'article-content'}):
         return []
 
     soup = BeautifulSoup(response.content, 'html.parser')
-    elements = soup.find_all(selector['tag'], class_=selector.get('class_'))
+    elements = soup.find_all(selector['tag'])
     return [element.get_text() for element in elements]
 
 def setup_db():
