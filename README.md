@@ -6,7 +6,7 @@
 - Optional: Have [Git](https://git-scm.com/downloads) installed
 
 # Install and Run
-- Install X Server - [VcXsrv](https://vcxsrv.com/) for Windows, [XQuartz](https://www.xquartz.org/) for MacOS, [X11 Server](https://help.ubuntu.com/community/ServerGUI#X11_Server_Installation) for Linux. Since I use Windows, the following instructions are tailerod for Windows
+- Install X Server - [VcXsrv](https://vcxsrv.com/) for Windows, [XQuartz](https://www.xquartz.org/) for MacOS, [X11 Server](https://help.ubuntu.com/community/ServerGUI#X11_Server_Installation) for Linux. Since I use Windows, the following instructions are tailored for Windows
 
 - Search xlaunch in start menu, launch it, don't change any of the options except disable access control - make sure that is checked. You can save the configuration for later use. Additionally, you can download the config from this repo (config.xlaunch) and run that file instead. You'll see the icon in your tray:
 ![](/assets/x-server-icon.png)
